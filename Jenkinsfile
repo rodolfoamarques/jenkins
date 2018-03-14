@@ -6,7 +6,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'install git'
-                sh 'apt-get install -y git'
+                sh 'apt-get install -y git-all'
                 echo 'composer install'
                 sh 'mkdir -p bin && cd bin && curl -sS https://getcomposer.org/installer | php'
                 sh 'cd ../'
