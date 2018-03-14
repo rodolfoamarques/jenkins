@@ -4,6 +4,7 @@ node {
         docker.image('mysql:5').inside("--link ${c.id}:db") {
             /* Wait until mysql service is up */
             sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
+            sh 'ls -al'
         }
         docker.image('php:5.6-cli-jessie').inside("--link ${c.id}:db") {
             echo 'install git'
@@ -15,6 +16,11 @@ node {
             sh 'ls -al'
             sh 'whoami'
             sh 'php bin/composer.phar install'
+            sh './vendor/bin/phpunit --version'
+        }
+        docker.image('ruby:2.5.0').inside("--link ${c.id}:db") {
+            echo 'install gems'
+            sh 'ls -al'
         }
     }
 }
