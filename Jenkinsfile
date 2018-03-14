@@ -7,7 +7,7 @@ pipeline {
             steps {
                 echo 'composer install'
                 sh 'mkdir bin && cd bin && curl -sS https://getcomposer.org/installer | php'
-                sh 'composer.phar --version'
+                sh 'php composer.phar --version'
                 sh 'cd ../ && ls -al'
             }
         }
