@@ -5,12 +5,16 @@ node {
             /* Wait until mysql service is up */
             sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
         }
-        docker.image('centos:7').inside("--link ${c.id}:db") {
-            /*
-             * Run some tests which require MySQL, and assume that it is
-             * available on the host name `db`
-             */
-            sh 'make check'
+        docker.image('php:5.6-cli-jessie').inside("--link ${c.id}:db") {
+            echo 'install git'
+            sh 'apt-get update && apt-get install -y git'
+            echo 'composer install'
+            sh 'mkdir -p bin && cd bin && curl -sS https://getcomposer.org/installer | php'
+            sh 'cd ../'
+            sh 'php bin/composer.phar --version'
+            sh 'ls -al'
+            sh 'whoami'
+            sh 'php bin/composer.phar install'
         }
     }
 }
