@@ -11,6 +11,7 @@ pipeline {
                 sh 'php bin/composer.phar --version'
                 sh 'ls -al'
                 sh 'whoami'
+                sh 'php bin/composer.phar update'
             }
         }
         stage('Test') {
