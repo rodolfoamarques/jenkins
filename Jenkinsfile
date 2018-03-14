@@ -13,13 +13,14 @@ pipeline {
                 sh 'php bin/composer.phar --version'
                 sh 'ls -al'
                 sh 'whoami'
-                sh 'php bin/composer.phar update'
+                sh 'php bin/composer.phar install'
             }
         }
         stage('Test') {
             steps {
                 sh 'php --version'
                 echo 'phpunit'
+                sh './vendor/bin/phpunit --version'
             }
         }
         stage('Deploy') {
