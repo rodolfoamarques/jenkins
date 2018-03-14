@@ -1,0 +1,14 @@
+{
+  "name": "jenkins",
+  "description": "testing jenkins flows",
+  "keywords": [],
+  "type": "project",
+  "require": {
+    "phpunit/phpunit": "~5.0"
+  },
+  "scripts": {
+    "test": [
+      "vendor/bin/phpunit"
+    ]
+  }
+}
