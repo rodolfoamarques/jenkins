@@ -6,14 +6,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'composer install deps'
-                sh 'composer update'
+                sh 'composer --version'
             }
         }
         stage('Test') {
             steps {
                 sh 'php --version'
                 echo 'phpunit starting'
-                sh 'composer run-script test'
             }
         }
         stage('Deploy') {
