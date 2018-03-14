@@ -2,10 +2,10 @@ node {
     stage 'checkout repo'
     checkout scm
 
-    stage 'build & test'
     docker.image('mysql:5.6').withRun('-e "MYSQL_ROOT_PASSWORD=mysql"') { c ->
         docker.image('mysql:5.6').inside("--link ${c.id}:db") {
             /* Wait until mysql service is up */
+            stage 'start mysql'
             echo 'waiting for mysql service to start'
             sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
         }
