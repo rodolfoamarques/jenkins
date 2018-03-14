@@ -1,18 +1,20 @@
 pipeline {
     agent {
-        docker { image 'prooph/composer:5.6' }
+        docker { image 'php:5.6-cli-jessie' }
     }
     stages {
         stage('Build') {
             steps {
-                echo 'composer install deps'
-                sh 'composer --version'
+                echo 'composer install'
+                sh 'mkdir bin && cd bin && curl -sS https://getcomposer.org/installer | php'
+                sh 'composer.phar --version'
+                sh 'cd ../ && ls -al'
             }
         }
         stage('Test') {
             steps {
                 sh 'php --version'
-                echo 'phpunit starting'
+                echo 'phpunit'
             }
         }
         stage('Deploy') {
