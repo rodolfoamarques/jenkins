@@ -10,6 +10,7 @@ pipeline {
                 sh 'cd ../'
                 sh 'php bin/composer.phar --version'
                 sh 'ls -al'
+                sh 'whoami'
             }
         }
         stage('Test') {
