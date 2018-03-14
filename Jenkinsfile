@@ -6,6 +6,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'php --version'
+                sh 'ls -al ./'
             }
         }
     }
