@@ -6,9 +6,10 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'composer install'
-                sh 'mkdir bin && cd bin && curl -sS https://getcomposer.org/installer | php'
-                sh 'php composer.phar --version'
-                sh 'cd ../ && ls -al'
+                sh 'mkdir -p bin && cd bin && curl -sS https://getcomposer.org/installer | php'
+                sh 'cd ../'
+                sh 'php bin/composer.phar --version'
+                sh 'ls -al'
             }
         }
         stage('Test') {
