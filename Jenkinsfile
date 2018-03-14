@@ -5,7 +5,9 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                php -v
+                ruby -v
+                node -v
+                npm -v
             }
         }
         stage('Test') {
