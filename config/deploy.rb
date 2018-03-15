@@ -15,7 +15,7 @@ set :log_level, :debug
 set :rails_env, -> { fetch :stage } # For capistrano3-unicorn.
 set :rbenv_ruby, '2.5.0'
 set :scm, :git
-set :ssh_options, keys: ['deploy/deploy']
+set :ssh_options, keys: ['../../ssh_keys/localhost']
 set :user, 'tarrynn'
 
 # this will be the d01 dev server as a proxy to the actual servers we need to deploy to
