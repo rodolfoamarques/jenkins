@@ -9,7 +9,7 @@ node {
 
             echo 'waiting for mysql service to start'
             sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
-            sh 'mysql -u root -pmysql -c "show databases;"'
+            sh 'mysql -u root -pmysql -h db -c "show databases;"'
         }
         docker.image('php:5.6-cli-jessie').inside("--link ${c.id}:db") {
             stage 'install dependencies'
