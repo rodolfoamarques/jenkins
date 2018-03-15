@@ -12,15 +12,11 @@ node {
             sh 'mysqladmin -u root -pmysql -h db create test'
             sh 'mysql -u root -pmysql -h db -e "show databases;"'
         }
-        docker.image('php:5.6-cli-jessie').inside("--link ${c.id}:db") {
-            stage 'install dependencies'
-            sh 'apt-get update && apt-get install -y git zip unzip ssh-client'
-            sh 'mkdir -p bin && cd bin && curl -sS https://getcomposer.org/installer | php'
-            sh 'cd ../'
-            sh 'php bin/composer.phar --version'
 
+
+        docker.image('tarrynn/php5.6_utils:local').inside("--link ${c.id}:db") {
             stage 'install composer dependencies'
-            sh 'php bin/composer.phar install'
+            sh 'php /usr/local/bin/composer install'
 
             stage 'run tests'
             echo 'running phpunit'
