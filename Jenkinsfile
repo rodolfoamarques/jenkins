@@ -9,7 +9,7 @@ node {
 
             echo 'waiting for mysql service to start'
             sh 'while ! mysqladmin ping -h db --silent; do sleep 1; done'
-            sh 'mysqladmin -u root -pmysql create test'
+            sh 'mysqladmin -u root -pmysql -h db create test'
             sh 'mysql -u root -pmysql -h db -e "show databases;"'
         }
         docker.image('php:5.6-cli-jessie').inside("--link ${c.id}:db") {
