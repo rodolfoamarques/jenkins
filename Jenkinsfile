@@ -9,7 +9,7 @@ node {
 
             stage 'test nesting and links'
             docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
-                sh 'apt-get install -y redis-cli mysql-client'
+                sh 'apt-get install -y redis-tools mysql-client'
                 sh 'while ! mysqladmin ping -h db --silent; do sleep 1; done'
                 sh 'while ! redis-cli -h redis ping; do sleep 1; done'
             }
