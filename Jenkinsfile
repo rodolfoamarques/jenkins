@@ -2,36 +2,38 @@ node {
     stage 'checkout repo'
     checkout scm
 
-    stage 'start services'
+    stage 'start mysql'
     docker.image('mysql:5.6').withRun('-e "MYSQL_ROOT_PASSWORD=mysql"') { c ->
         docker.image('mysql:5.6').inside("--link ${c.id}:db") {
             /* Wait until mysql service is up */
-
-            echo 'waiting for mysql service to start'
-            sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
+            sh 'while ! mysqladmin ping -h db --silent; do sleep 1; done'
         }
-        docker.image('php:5.6-cli-jessie').inside("--link ${c.id}:db") {
-            stage 'install dependencies'
-            sh 'apt-get update && apt-get install -y git'
-            sh 'mkdir -p bin && cd bin && curl -sS https://getcomposer.org/installer | php'
-            sh 'cd ../'
-            sh 'php bin/composer.phar --version'
 
-            stage 'install composer dependencies'
-            sh 'php bin/composer.phar install'
+        stage 'setup test database'
+        docker.image('mysql:5.6').inside("--link ${c.id}:db") {
+            sh 'mysqladmin -u root -pmysql -h db create test'
+            sh 'mysql -u root -pmysql -h db -e "show databases;"'
+        }
 
-            stage 'run tests'
-            echo 'running phpunit'
+        stage 'build the app'
+        docker.image('tarrynn/php5.6_utils:local').inside("--link ${c.id}:db") {
+            sh 'composer install'
+        }
+
+        stage 'run tests'
+        docker.image('tarrynn/php5.6_utils:local').inside("--link ${c.id}:db") {
             sh './vendor/bin/phpunit --version'
         }
     }
 
     stage 'prepare deployment'
-    docker.image('ruby:2.5.0').withRun('') { c ->
+    docker.image('ruby:2.2.9').withRun('') { c ->
         echo 'installing bundler'
         sh 'gem install bundler'
         sh 'bundle install'
+    }
 
+    docker.image('ruby:2.2.9').withRun('') { c ->
         if (env.BRANCH_NAME == 'master') {
              stage 'deploy to production'
              echo 'bundle exec cap production deploy'
@@ -49,8 +51,7 @@ node {
 
         if (env.BRANCH_NAME == 'development') {
              stage 'deploy to development'
-             echo 'bundle exec cap development deploy'
+             sh 'bundle exec cap development deploy'
         }
-
     }
 }
