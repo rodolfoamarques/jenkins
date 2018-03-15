@@ -9,7 +9,7 @@ node {
 
             docker.image('mysql:5.6').inside("--link ${c.id}:db") {
                 /* Wait until mysql service is up */
-                sh 'while ! mysqladmin ping -h db --silent; do sleep 1; done'
+                sh 'while ! mysqladmin ping -h db; do sleep 1; done'
             }
 
             docker.image('redis:3.0.7-alpine').inside("--link ${c2.id}:redis") {
