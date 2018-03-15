@@ -32,6 +32,9 @@ node {
         sh 'gem install bundler'
         sh 'bundle install'
 
+        sh 'ls -al ../'
+        sh 'ls -al ../../'
+
         if (env.BRANCH_NAME == 'master') {
              stage 'deploy to production'
              echo 'bundle exec cap production deploy'
