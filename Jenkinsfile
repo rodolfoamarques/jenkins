@@ -3,7 +3,19 @@ node {
     checkout scm
 
     stage 'start mysql'
-    docker.image('mysql:5.6').withRun('-e "MYSQL_ROOT_PASSWORD=mysql"') { c ->
+    docker.image('mysql:5.6').withRun('-e "MYSQL_ROOT_PASSWORD=mysql" -p 3306:3306') { c ->
+
+        docker.image('redis:3.0.7-alpine').withRun('-p 6379:6379') { c2 ->
+
+            stage 'build the app'
+            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
+                sh 'composer install'
+                sh 'ping db'
+                sh 'ping redis'
+            }
+
+        }
+
         docker.image('mysql:5.6').inside("--link ${c.id}:db") {
             /* Wait until mysql service is up */
             sh 'while ! mysqladmin ping -h db --silent; do sleep 1; done'
