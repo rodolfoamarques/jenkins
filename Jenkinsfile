@@ -7,8 +7,6 @@ node {
         docker.image('mysql:5.6').inside("--link ${c.id}:db") {
             /* Wait until mysql service is up */
             sh 'while ! mysqladmin ping -h db --silent; do sleep 1; done'
-            sh 'mysqladmin -u root -pmysql -h db create test'
-            sh 'mysql -u root -pmysql -h db -e "show databases;"'
         }
 
         stage 'setup test database'
