@@ -41,7 +41,7 @@ node {
 
         if (env.BRANCH_NAME == 'staging') {
              stage 'deploy to staging'
-             echo 'bundle exec cap staging deploy'
+             sh 'bundle exec cap staging deploy'
         }
 
         if (env.BRANCH_NAME == 'testing') {
