@@ -36,17 +36,17 @@ node {
     docker.image('ruby:2.2.9').withRun('') { c ->
         if (env.BRANCH_NAME == 'master') {
              stage 'deploy to production'
-             echo 'bundle exec cap production deploy'
+             sh 'bundle exec cap production deploy'
         }
 
         if (env.BRANCH_NAME == 'staging') {
              stage 'deploy to staging'
-             echo 'bundle exec cap staging deploy'
+             sh 'bundle exec cap staging deploy'
         }
 
         if (env.BRANCH_NAME == 'testing') {
              stage 'deploy to testing'
-             echo 'bundle exec cap testing deploy'
+             sh 'bundle exec cap testing deploy'
         }
 
         if (env.BRANCH_NAME == 'development') {
