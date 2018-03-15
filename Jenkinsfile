@@ -2,6 +2,8 @@ node {
     stage 'checkout repo'
     checkout scm
 
+    sh 'echo $CUSTOM_VAR'
+
     stage 'start mysql'
     docker.image('mysql:5.6').withRun('-e "MYSQL_ROOT_PASSWORD=mysql"') { c ->
         docker.image('mysql:5.6').inside("--link ${c.id}:db") {
