@@ -33,7 +33,6 @@ node {
         sh 'bundle install'
     }
 
-    stage 'deploy to enviroment'
     docker.image('ruby:2.2.9').withRun('') { c ->
         if (env.BRANCH_NAME == 'master') {
              stage 'deploy to production'
