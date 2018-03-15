@@ -9,6 +9,7 @@ node {
 
             echo 'waiting for mysql service to start'
             sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
+            sh 'mysql -u root -pmysql -c "show databases;"'
         }
         docker.image('php:5.6-cli-jessie').inside("--link ${c.id}:db") {
             stage 'install dependencies'
@@ -31,6 +32,7 @@ node {
         echo 'installing bundler'
         sh 'gem install bundler'
         sh 'bundle install'
+        sh 'ifconfig'
 
         if (env.BRANCH_NAME == 'master') {
              stage 'deploy to production'
@@ -49,7 +51,7 @@ node {
 
         if (env.BRANCH_NAME == 'development') {
              stage 'deploy to development'
-             sh 'bundle exec cap development deploy'
+             echo 'bundle exec cap development deploy'
         }
 
     }
