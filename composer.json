@@ -3,7 +3,7 @@
   "description": "testing jenkins flows",
   "keywords": [],
   "type": "project",
-  "require": {
+  "require-dev": {
     "phpunit/phpunit": "~5.0"
   },
   "scripts": {
