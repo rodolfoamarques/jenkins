@@ -18,6 +18,28 @@ set :scm, :git
 set :ssh_options, keys: ['../../ssh_keys/localhost']
 set :user, 'tarrynn'
 
+namespace :deploy do # get dependencies and run migrations before symlink to current folder
+  after :deploy, :updated do
+    on roles(:app) do
+      execute "cd '#{release_path}'; composer install", raise_on_non_zero_exit: true
+    end
+    on roles(:db) do # migrations
+      execute "cd '#{release_path}'; echo 'run migrations'", raise_on_non_zero_exit: true
+    end
+  end
+end
+
+namespace :deploy do
+  desc 'Restart application'
+  task :build do
+    on roles(:web) do
+      execute "echo 'restart webserver here'"
+    end
+  end
+
+  after :published, :build
+end
+
 # this will be the d01 dev server as a proxy to the actual servers we need to deploy to
 if ENV['VIA_BASTION']
   bastion_host = 'bastion.host.here'
