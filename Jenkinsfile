@@ -25,7 +25,7 @@ node {
     }
 
     stage 'prepare deployment'
-    docker.image('ruby:2.5.0').withRun('') { c ->
+    docker.image('ruby:2.2.9').withRun('') { c ->
         echo 'installing bundler'
         sh 'gem install bundler'
         sh 'bundle install'

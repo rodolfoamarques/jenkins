@@ -13,7 +13,7 @@ set :format, :pretty
 set :keep_releases, 2
 set :log_level, :debug
 set :rails_env, -> { fetch :stage } # For capistrano3-unicorn.
-set :rbenv_ruby, '2.5.0'
+set :rbenv_ruby, '2.2.9'
 set :scm, :git
 set :ssh_options, keys: ['../../ssh_keys/localhost']
 set :user, 'tarrynn'
