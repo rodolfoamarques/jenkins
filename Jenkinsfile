@@ -3,9 +3,9 @@ node {
     checkout scm
 
     stage 'start container services'
-    docker.image('mysql:5.6').withRun('-e "MYSQL_ROOT_PASSWORD=mysql" -p 3306:3306') { c ->
+    docker.image('mysql:5.6').withRun('-e "MYSQL_ROOT_PASSWORD=mysql"') { c ->
 
-        docker.image('redis:3.0.7-alpine').withRun('-p 6379:6379') { c2 ->
+        docker.image('redis:3.0.7-alpine').withRun('') { c2 ->
 
             docker.image('mysql:5.6').inside("--link ${c.id}:db") {
                 /* Wait until mysql service is up */
