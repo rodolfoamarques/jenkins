@@ -16,12 +16,12 @@ node {
         }
 
         stage 'build the app'
-        docker.image('tarrynn/php5.6_utils:local').inside("--link ${c.id}:db") {
+        docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db") {
             sh 'composer install'
         }
 
         stage 'run tests'
-        docker.image('tarrynn/php5.6_utils:local').inside("--link ${c.id}:db") {
+        docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db") {
             sh './vendor/bin/phpunit --version'
         }
     }
