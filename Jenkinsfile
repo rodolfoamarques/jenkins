@@ -24,12 +24,17 @@ node {
             }
 
             stage 'build the app'
-            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db") {
+            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
                 sh 'composer install'
             }
 
+            stage 'configure the app'
+            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
+                echo 'download config files here specific to running on this environment'
+            }
+
             stage 'run tests'
-            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db") {
+            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
                 sh './vendor/bin/phpunit --version'
             }
 
