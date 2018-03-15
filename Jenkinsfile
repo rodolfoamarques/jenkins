@@ -5,7 +5,7 @@ node {
     stage 'start container services'
     docker.image('mysql:5.6').withRun('-e "MYSQL_ROOT_PASSWORD=mysql" -p 3306:3306') { c ->
 
-        docker.image('redis:3.0.7-alpine').withRun('-p 6370:6379') { c2 ->
+        docker.image('redis:3.0.7-alpine').withRun('-p 6379:6379') { c2 ->
 
             docker.image('mysql:5.6').inside("--link ${c.id}:db") {
                 /* Wait until mysql service is up */
@@ -14,7 +14,7 @@ node {
 
             docker.image('redis:3.0.7-alpine').inside("--link ${c2.id}:redis") {
                 /* Wait until redis service is up*/
-                sh 'while ! redis-cli -h redis -p 6370 ping; do sleep 1; done'
+                sh 'while ! redis-cli -h redis ping; do sleep 1; done'
             }
 
             stage 'setup test database'
