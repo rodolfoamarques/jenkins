@@ -16,7 +16,7 @@ node {
 
         docker.image('tarrynn/php5.6_utils:local').inside("--link ${c.id}:db") {
             stage 'install composer dependencies'
-            sh 'php /usr/local/bin/composer install'
+            sh 'composer install'
 
             stage 'run tests'
             echo 'running phpunit'
@@ -37,7 +37,7 @@ node {
 
         if (env.BRANCH_NAME == 'staging') {
              stage 'deploy to staging'
-             sh 'bundle exec cap staging deploy'
+             echo 'bundle exec cap staging deploy'
         }
 
         if (env.BRANCH_NAME == 'testing') {
@@ -47,7 +47,7 @@ node {
 
         if (env.BRANCH_NAME == 'development') {
              stage 'deploy to development'
-             echo 'bundle exec cap development deploy'
+             sh 'bundle exec cap development deploy'
         }
 
     }
