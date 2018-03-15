@@ -7,11 +7,11 @@ node {
 
         docker.image('redis:3.0.7-alpine').withRun('-p 6379:6379') { c2 ->
 
-            stage 'build the app'
+            stage 'test nesting and links'
             docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
-                sh 'composer install'
-                sh 'ping db'
-                sh 'ping redis'
+                sh 'apt-get install -y redis-cli mysql-client'
+                sh 'while ! mysqladmin ping -h db --silent; do sleep 1; done'
+                sh 'while ! redis-cli -h redis ping; do sleep 1; done'
             }
 
         }
