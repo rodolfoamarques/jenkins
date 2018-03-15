@@ -14,7 +14,7 @@ node {
         }
         docker.image('php:5.6-cli-jessie').inside("--link ${c.id}:db") {
             stage 'install dependencies'
-            sh 'apt-get update && apt-get install -y git zip unzip'
+            sh 'apt-get update && apt-get install -y git zip unzip ssh-client'
             sh 'mkdir -p bin && cd bin && curl -sS https://getcomposer.org/installer | php'
             sh 'cd ../'
             sh 'php bin/composer.phar --version'
@@ -33,7 +33,6 @@ node {
         echo 'installing bundler'
         sh 'gem install bundler'
         sh 'bundle install'
-        sh 'ifconfig'
 
         if (env.BRANCH_NAME == 'master') {
              stage 'deploy to production'
