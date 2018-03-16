@@ -40,7 +40,7 @@ node {
                 sh 'bundle install'
             }
 
-            stage 'linting commit'
+            stage 'linting commits'
             docker.image('ruby:2.2.9').withRun('') { c3 ->
                 sh 'bundle exec danger'
             }
