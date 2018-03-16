@@ -34,14 +34,14 @@ node {
             }
 
             stage 'prepare ruby environment'
-            docker.image('ruby:2.2.9') {
+            docker.image('ruby:2.2.9').withRun('') { c ->
                 echo 'installing bundler'
                 sh 'gem install bundler -v 1.16.1'
                 sh 'bundle install'
             }
 
             stage 'linting commit'
-            docker.image('ruby:2.2.9') {
+            docker.image('ruby:2.2.9').withRun('') { c ->
                 sh 'bundle exec danger'
             }
 
