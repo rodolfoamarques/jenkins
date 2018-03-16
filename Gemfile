@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+group :test do
+    gem 'danger'
+end
+
 group :deployment do
   gem 'capistrano', '~> 3.4.1'
   gem 'capistrano-bundler', require: false

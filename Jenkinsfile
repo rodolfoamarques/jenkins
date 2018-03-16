@@ -24,12 +24,24 @@ node {
             }
 
             stage 'build the app'
-            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db") {
+            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
                 sh 'composer install'
             }
 
+            stage 'configure the app'
+            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
+                echo 'download config files here specific to running on this environment'
+            }
+
+            stage 'linting commits'
+            docker.image('ruby:2.2.9').withRun('') { c3 ->
+                sh 'gem install bundler -v 1.16.1'
+                sh 'bundle install'
+                sh 'bundle exec danger'
+            }
+
             stage 'run tests'
-            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db") {
+            docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
                 sh './vendor/bin/phpunit --version'
             }
 
@@ -42,14 +54,12 @@ node {
           || env.BRANCH_NAME == 'staging'
           || env.BRANCH_NAME == 'master') {
 
-          stage 'prepare deployment'
           docker.image('ruby:2.2.9').withRun('') { c ->
-              echo 'installing bundler'
-              sh 'gem install bundler'
-              sh 'bundle install'
-          }
 
-          docker.image('ruby:2.2.9').withRun('') { c ->
+              stage 'preparing deployment'
+              sh 'gem install bundler -v 1.16.1'
+              sh 'bundle install'
+
               if (env.BRANCH_NAME == 'master') {
                    stage 'deploy to production'
                    sh 'bundle exec cap production deploy'
