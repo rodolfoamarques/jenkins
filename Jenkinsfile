@@ -50,7 +50,7 @@ node {
           stage 'prepare deployment'
           docker.image('ruby:2.2.9').withRun('') { c ->
               echo 'installing bundler'
-              sh 'gem install bundler'
+              sh 'gem install bundler -v 1.16.1'
               sh 'bundle install'
           }
 
