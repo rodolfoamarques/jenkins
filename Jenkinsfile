@@ -33,6 +33,18 @@ node {
                 echo 'download config files here specific to running on this environment'
             }
 
+            stage 'prepare ruby environment'
+            docker.image('ruby:2.2.9') {
+                echo 'installing bundler'
+                sh 'gem install bundler -v 1.16.1'
+                sh 'bundle install'
+            }
+
+            stage 'linting commit'
+            docker.image('ruby:2.2.9') {
+                sh 'bundle exec danger'
+            }
+
             stage 'run tests'
             docker.image('tarrynn/php5.6_utils:latest').inside("--link ${c.id}:db --link ${c2.id}:redis") {
                 sh './vendor/bin/phpunit --version'
@@ -46,13 +58,6 @@ node {
           || env.BRANCH_NAME == 'testing'
           || env.BRANCH_NAME == 'staging'
           || env.BRANCH_NAME == 'master') {
-
-          stage 'prepare deployment'
-          docker.image('ruby:2.2.9').withRun('') { c ->
-              echo 'installing bundler'
-              sh 'gem install bundler -v 1.16.1'
-              sh 'bundle install'
-          }
 
           docker.image('ruby:2.2.9').withRun('') { c ->
               if (env.BRANCH_NAME == 'master') {
