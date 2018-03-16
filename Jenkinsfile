@@ -33,10 +33,14 @@ node {
                 echo 'download config files here specific to running on this environment'
             }
 
-            stage 'linting commits'
-            docker.image('ruby:2.2.9').withRun('') { c3 ->
+            stage 'preparing ruby environment'
+            docker.image('ruby:2.2.9').inside("") {
                 sh 'gem install bundler -v 1.16.1'
                 sh 'bundle install'
+            }
+
+            stage 'linting commits'
+            docker.image('ruby:2.2.9').inside("") {
                 sh 'bundle exec danger'
             }
 
@@ -54,11 +58,7 @@ node {
           || env.BRANCH_NAME == 'staging'
           || env.BRANCH_NAME == 'master') {
 
-          docker.image('ruby:2.2.9').withRun('') { c ->
-
-              stage 'preparing deployment'
-              sh 'gem install bundler -v 1.16.1'
-              sh 'bundle install'
+          docker.image('ruby:2.2.9').inside("") {
 
               if (env.BRANCH_NAME == 'master') {
                    stage 'deploy to production'
@@ -79,6 +79,7 @@ node {
                    stage 'deploy to development'
                    sh 'bundle exec cap development deploy'
               }
+
           }
 
     }
