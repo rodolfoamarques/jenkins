@@ -34,21 +34,14 @@ namespace :deploy do
   desc 'Restart application'
   task :build do
     on roles(:web) do
+      #copy .htaccess at the environment level so that apache can do the switch there
+      execute "cd '#{release_path}'; cp -rf ./.htaccess #{fetch :project_path}", raise_on_non_zero_exit: true
+
       execute "echo 'restart webserver here'"
     end
   end
 
   after :published, :build
-end
-
-namespace :deploy do
-  desc 'deploy .htaccess'
-  task :copy_htaccess do
-    #copy .htaccess at the environment level so that apache can do the switch there
-    execute "cd '#{release_path}'; cp -rf ./.htaccess #{fetch :project_path}", raise_on_non_zero_exit: true
-  end
-
-  after :finished, :copy_htaccess
 end
 
 # this will be the d01 dev server as a proxy to the actual servers we need to deploy to
