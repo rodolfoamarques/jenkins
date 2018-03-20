@@ -40,6 +40,16 @@ namespace :deploy do
   after :published, :build
 end
 
+namespace :deploy do
+  desc 'deploy .htaccess'
+  task :copy_htaccess do
+    #copy .htaccess at the environment level so that apache can do the switch there
+    execute "cd '#{release_path}'; cp -rf ./.htaccess ../../../../"
+  end
+
+  after :finished, :copy_htaccess
+end
+
 # this will be the d01 dev server as a proxy to the actual servers we need to deploy to
 if ENV['VIA_BASTION']
   bastion_host = 'bastion.host.here'
