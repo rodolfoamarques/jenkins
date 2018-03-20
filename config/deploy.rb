@@ -9,6 +9,7 @@ set :log_level, :debug
 set :branch, 'development'
 set :bundle_flags, '--deployment --quiet'
 set :deploy_to, -> { "/home/#{fetch :user}/Desktop/deployments/#{fetch :application}/#{fetch :stage}" }
+set :project_path, -> { "/home/#{fetch :user}/Desktop/deployments/#{fetch :application}" }
 set :format, :pretty
 set :keep_releases, 2
 set :log_level, :debug
@@ -33,6 +34,9 @@ namespace :deploy do
   desc 'Restart application'
   task :build do
     on roles(:web) do
+      #copy .htaccess at the environment level so that apache can do the switch there
+      execute "cd '#{release_path}'; cp -rf ./.htaccess #{fetch :project_path}", raise_on_non_zero_exit: true
+
       execute "echo 'restart webserver here'"
     end
   end
